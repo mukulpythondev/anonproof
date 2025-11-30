@@ -1,5 +1,8 @@
-const BASE_URL = "http://10.85.177.229:4000"; // change to your server IP for production
+const BASE_URL = "http://20.20.0.18:4000"; // your backend server
 
+// ---------------------------------------
+// GENERATE PROOF (claim + inputValue)
+// ---------------------------------------
 export async function generateProof(claim, inputValue) {
   const res = await fetch(`${BASE_URL}/api/proof/generate`, {
     method: "POST",
@@ -7,10 +10,18 @@ export async function generateProof(claim, inputValue) {
     body: JSON.stringify({ claim, inputValue }),
   });
 
-  if (!res.ok) throw new Error("Failed to generate proof");
-  return await res.json();
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new Error(json.error || "Failed to generate proof");
+  }
+
+  return json; // { proofHash, claim, utxo?, ... }
 }
 
+// ---------------------------------------
+// VERIFY PROOF (uses proofHash ONLY)
+// ---------------------------------------
 export async function verifyProof(proofHash) {
   const res = await fetch(`${BASE_URL}/api/proof/verify`, {
     method: "POST",
@@ -18,5 +29,11 @@ export async function verifyProof(proofHash) {
     body: JSON.stringify({ proofHash }),
   });
 
-  return await res.json();
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new Error(json.error || "Failed to verify proof");
+  }
+
+  return json; // { valid: true/false }
 }

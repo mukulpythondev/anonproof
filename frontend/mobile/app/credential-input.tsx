@@ -20,13 +20,24 @@ export default function CredentialInput() {
   setLoading(true);
 
   try {
-    const backendProof = await generateProof(id, value);
+    const result = await generateProof(id, value);
 
-    await saveCredential(backendProof);
+const proof = {
+  proofHash: result.proofHash,
+  proof: result.proof,
+  publicSignals: result.publicSignals,
+  claim: id,
+  timestamp: new Date().toISOString(),
+  utxo: result.txHash || "pending",
+  validator: "midnight_zkp_v1"
+};
+
+await saveCredential(proof);
+
 
     router.push({
       pathname: "/proof-success",
-      params: { proof: JSON.stringify(backendProof) },
+      params: { proof: JSON.stringify(proof) },
     });
   } catch (err) {
     alert("Proof generation failed: " + err.message);

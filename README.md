@@ -37,7 +37,40 @@ Using **Midnight’s Compact ZK circuits**, users generate proofs *locally* on t
 Event organizers verify these proofs using a **private Plutus smart contract** on Cardano.
 A verification receipt (UTxO hash) is anchored on-chain — containing **zero PII**.
 
+# Prototype  
+Landing Page
+
 ---
+
+## Attendee Application
+
+### User Screens (3-Column Grid)
+
+| Home | Login | Wallet |
+|------|-------|--------|
+| <img width="260" src="https://github.com/user-attachments/assets/5f317056-0153-48f1-b479-3cc41e7d2e58" /> | <img width="260" src="https://github.com/user-attachments/assets/f970fe50-65e7-4cce-b1b2-8e35f5105a35" /> | <img width="260" src="https://github.com/user-attachments/assets/963c9b15-9d56-4809-9161-98be72abf5a6" /> |
+
+| Choose Credential | DOB Input | Event Entry QR |
+|-------------------|-----------|----------------|
+| <img width="260" src="https://github.com/user-attachments/assets/774246e6-3368-497b-bba6-d82c5d9e8072" /> | <img width="260" src="https://github.com/user-attachments/assets/4c3f6a8f-92c1-4cf6-a55a-e7322a2fe42c" /> | <img width="260" src="https://github.com/user-attachments/assets/745d4b67-f3d5-4122-a0fd-bbe0ed168298" /> |
+
+---
+
+## Organizer Application
+
+### Organizer Screens (3-Column Grid)
+
+| Login | Dashboard | Scan QR |
+|-------|-----------|---------|
+| <img width="260" src="https://github.com/user-attachments/assets/226dbf43-82ea-4ac8-b980-d4ffc4936752" /> | <img width="260" src="https://github.com/user-attachments/assets/359dd026-4423-4754-95cf-e1a3ded653eb" /> | <img width="260" src="https://github.com/user-attachments/assets/2707535b-fa8a-4821-9af8-b7652de2fa29" /> |
+
+
+
+
+
+
+
+
 
 # ⭐ **Key Features**
 

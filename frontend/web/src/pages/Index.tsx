@@ -6,6 +6,11 @@ import { Card } from "@/components/ui/card";
 import WhatsappMeme from "../../public/whatsapp_meme.png"
 import KingBowDownMeme from "../../public/king_bowdown.png"
 import BoyFriendMeme from "../../public/boyfriend_meme.png"
+import HomePage from "../../public/homepage.jpeg"
+import Wallet from "../../public/wallet.jpeg"
+import credentials from "../../public/credentials.jpeg"
+import entryqr from "../../public/entryqr.jpeg"
+import dob from "../../public/dob.jpeg"
 const Index = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -232,45 +237,53 @@ const Index = () => {
       </section>
 
       {/* Mobile App Showcase */}
-      <section className="py-32 relative overflow-hidden">
-        <div className="container mx-auto px-6">
+      {/* Mobile App Showcase */}
+<section className="py-32 relative overflow-hidden">
+  <div className="container mx-auto px-6">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="text-center mb-16"
+    >
+      <h2 className="text-5xl font-bold mb-4">Designed for Privacy.</h2>
+      <p className="text-xl gradient-text font-semibold">Built for Speed.</p>
+    </motion.div>
+
+    <div className="relative h-[600px] flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center gap-8">
+        {[
+          { label: "Home", img: HomePage },
+          { label: "Wallet", img: Wallet },
+          {label : "Credentials", img: credentials},
+          {label : "Date of Birth", img: dob},
+          { label: "Entry QR", img: entryqr },
+        
+        ].map((screen, i) => (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            key={i}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            transition={{ duration: 0.6, delay: i * 0.2 }}
+            className="w-64 h-[500px] glass glow-border rounded-[3rem] p-4 transform hover:scale-105 transition-transform duration-300"
+            style={{ transform: `perspective(1000px) rotateY(${(i - 1) * 10}deg)` }}
           >
-            <h2 className="text-5xl font-bold mb-4">Designed for Privacy.</h2>
-            <p className="text-xl gradient-text font-semibold">Built for Speed.</p>
-          </motion.div>
-
-          <div className="relative h-[600px] flex items-center justify-center">
-            <div className="absolute inset-0 flex items-center justify-center gap-8">
-              {[...Array(3)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.2 }}
-                  className="w-64 h-[500px] glass glow-border rounded-[3rem] p-4 transform hover:scale-105 transition-transform duration-300"
-                  style={{ transform: `perspective(1000px) rotateY(${(i - 1) * 10}deg)` }}
-                >
-                  <div className="w-full h-full rounded-[2.5rem] bg-background/50 flex items-center justify-center">
-                    <div className="text-center space-y-4">
-                      <Shield className="w-16 h-16 text-primary mx-auto" />
-                      <p className="text-sm text-muted-foreground px-4">
-                        {i === 0 ? "Onboarding" : i === 1 ? "Add Credential" : "QR Proof"}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+            <div className="w-full h-full rounded-[2.5rem] overflow-hidden bg-background/70 flex items-center justify-center">
+              <img
+                src={screen.img}
+                alt={screen.label}
+                className="w-full h-full object-cover rounded-[2.5rem]"
+              />
             </div>
-          </div>
-        </div>
-      </section>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* Technology Section */}
       <section id="technology" className="py-32 relative">
@@ -380,9 +393,11 @@ const Index = () => {
                   <Button size="lg" className="gradient-bg glow-shadow text-lg font-semibold px-8 py-6">
                     Download App
                   </Button>
+                  <a href="https://github.com/mukulpythondev/anonproof">
                   <Button size="lg" variant="outline" className="text-lg font-semibold px-8 py-6 glow-border">
                     View Code
                   </Button>
+                  </a>
                   <Button size="lg" variant="outline" className="text-lg font-semibold px-8 py-6 glow-border">
                     Try Demo
                   </Button>

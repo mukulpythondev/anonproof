@@ -21,7 +21,8 @@ export default function Scanner() {
   try {
     const scannedData = JSON.parse(data);
 
-    const backend = await verifyProof(scannedData.proofHash);
+    const backend = await verifyProof(scannedData.proof, scannedData.publicSignals);
+
 
     const entry = {
       claim: backend.claim,
