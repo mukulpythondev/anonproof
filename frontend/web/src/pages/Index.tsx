@@ -8,7 +8,7 @@ import KingBowDownMeme from "../../public/king_bowdown.png"
 import BoyFriendMeme from "../../public/boyfriend_meme.png"
 import HomePage from "../../public/homepage.jpeg"
 import Wallet from "../../public/wallet.jpeg"
-import credentials from "../../public/credentials.jpeg"
+import orgdash from "../../public/orgdash.jpeg"
 import entryqr from "../../public/qrshare.jpeg"
 import dob from "../../public/dob.jpeg"
 const Index = () => {
@@ -258,7 +258,7 @@ const Index = () => {
         {[
           { label: "Home", img: HomePage },
           { label: "Wallet", img: Wallet },
-          {label : "Credentials", img: credentials},
+          {label : "Organizer Dashbboard", img: orgdash},
           {label : "Date of Birth", img: dob},
           { label: "Entry QR", img: entryqr },
         
@@ -328,8 +328,8 @@ const Index = () => {
       </section>
             {/* Meme Zone Section */}
 {/* Meme Zone Section */}
-<section id="meme-zone" className="py-32 relative">
-        <h2 className="text-5xl font-bold mb-4">Designed for Privacy.</h2>
+<section id="meme-zone" className="py-32 text-center relative">
+        <h2 className="text-5xl  font-bold mb-4"> MEME ZONE </h2>
   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
   {[
     {
