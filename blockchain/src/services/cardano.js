@@ -2,31 +2,25 @@ import { Blockfrost, Lucid } from "lucid-cardano";
 
 let lucid = null;
 
-/* -------------------------------------------------
-   ⭐ INIT LUCID
-------------------------------------------------- */
 export async function initLucid() {
   if (lucid) return lucid;
 
   const apiKey = process.env.BLOCKFROST_API_KEY;
 
   if (!apiKey) {
-    console.warn("⚠️ BLOCKFROST_API_KEY missing — chain disabled");
+    console.warn("⚠️ BLOCKFROST_API_KEY missing — Cardano disabled");
     return null;
   }
 
-  lucid = await Lucid.new(
-    new Blockfrost("https://cardano-preprod.blockfrost.io/api/v0", apiKey),
-    "Preprod"
-  );
+  // Correct Preprod URL
+  const API = "https://cardano-preprod.blockfrost.io/api/v0";
 
-  console.log("✅ Lucid initialized for Cardano Testnet");
+  lucid = await Lucid.new(new Blockfrost(API, apiKey), "Preprod");
+
+  console.log("✅ Lucid initialized for Cardano Preprod");
   return lucid;
 }
 
-/* -------------------------------------------------
-   ⭐ CREATE WALLET
-------------------------------------------------- */
 export async function createWallet(seedPhrase) {
   const api = await initLucid();
   if (!api) throw new Error("Lucid not initialized");
@@ -38,15 +32,11 @@ export async function createWallet(seedPhrase) {
   return { api, address };
 }
 
-/* -------------------------------------------------
-   ⭐ GET WALLET BALANCE
-------------------------------------------------- */
 export async function getWalletBalance(seedPhrase) {
   const { api, address } = await createWallet(seedPhrase);
-
   const utxos = await api.wallet.getUtxos();
-  let total = 0n;
 
+  let total = 0n;
   utxos.forEach((u) => (total += u.assets.lovelace));
 
   return {
@@ -57,9 +47,6 @@ export async function getWalletBalance(seedPhrase) {
   };
 }
 
-/* -------------------------------------------------
-   ⭐ CREATE UTXO WITH FALLBACK MODE
-------------------------------------------------- */
 export async function createProofUTxO(proofHash, claim, seedPhrase) {
   console.log(`📝 createProofUTxO():`, proofHash, claim);
 
@@ -67,14 +54,12 @@ export async function createProofUTxO(proofHash, claim, seedPhrase) {
     const { api } = await createWallet(seedPhrase);
     const balanceInfo = await getWalletBalance(seedPhrase);
 
-    // 1️⃣ If NO BALANCE → fallback mode
     if (!balanceInfo.hasBalance) {
-      console.warn("⚠️ Wallet empty — using MOCK TX. No real blockchain transaction.");
+      console.warn("⚠️ Wallet empty → MOCK TX used");
       return "mock_tx_" + proofHash;
     }
 
-    // 2️⃣ REAL ON-CHAIN TX
-    console.log("💰 Wallet funded. Creating real Cardano UTxO...");
+    console.log("💰 Wallet funded → creating REAL UTxO...");
 
     const metadata = {
       674: {
@@ -96,39 +81,34 @@ export async function createProofUTxO(proofHash, claim, seedPhrase) {
     const signed = await tx.sign().complete();
     const txHash = await signed.submit();
 
-    console.log("✅ Real UTxO Created:", txHash);
+    console.log("✅ REAL Cardano UTxO:", txHash);
     return txHash;
+
   } catch (err) {
     console.error("❌ Failed creating UTxO:", err);
-
-    // LAST RESORT FALLBACK
-    console.warn("⚠️ Creating FALLBACK mock transaction");
+    console.warn("⚠️ Fallback → mock tx used");
     return "mock_tx_" + proofHash;
   }
 }
 
-/* -------------------------------------------------
-   ⭐ VERIFY UTXO
-------------------------------------------------- */
 export async function verifyUTxO(txHash) {
   try {
     if (txHash.startsWith("mock_tx_")) {
-      console.log("ℹ️ Mock TX detected → auto valid");
+      console.log("ℹ️ mock tx detected → auto valid");
       return true;
     }
 
     const apiKey = process.env.BLOCKFROST_API_KEY;
 
-    const res = await fetch(
-      new Blockfrost(
-  "https://cardano-preprod.blockfrost.io/api/v0",
-  apiKey
-)
-,
-      { headers: { project_id: apiKey } }
-    );
+    // Correct verify URL
+    const url = `https://cardano-preprod.blockfrost.io/api/v0/txs/${txHash}`;
+
+    const res = await fetch(url, {
+      headers: { project_id: apiKey },
+    });
 
     return res.ok;
+
   } catch (err) {
     console.error("❌ verifyUTxO Error:", err);
     return false;

@@ -1,125 +1,73 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
+import { useState } from "react";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import QRCode from "react-native-qrcode-svg";
-import Animated, { FadeInUp } from "react-native-reanimated";
-import { useEffect, useState } from "react";
-import { loadCredentialByClaim } from "../util/storage";
+import { generateProof } from "@/util/api";
 
 export default function ShareProof() {
   const { claim } = useLocalSearchParams();
-  const [proof, setProof] = useState(null);
+  const [qrData, setQrData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadCredentialByClaim(claim).then(setProof);
-  }, []);
+  async function createProof() {
+    try {
+      const res = await generateProof(claim, "user_input_random");
 
-  if (!proof) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loading}>Loading proof…</Text>
-      </View>
-    );
+      const qrPayload = {
+        claim: res.claim,
+        proofHash: res.proofHash,
+        utxo: res.utxo,
+        proof: res.proof,
+        publicSignals: res.publicSignals,
+      };
+
+      setQrData(qrPayload);
+    } catch (err) {
+      alert("Failed to generate proof: " + err.message);
+      router.back();
+    } finally {
+      setLoading(false);
+    }
   }
 
-  const qrValue = JSON.stringify({
-  proofHash: proof.proofHash,
-  utxo: proof.utxo,
-  claim: proof.claim
-});
+  useState(() => {
+    createProof();
+  });
 
+  if (loading)
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#38bdf8" />
+        <Text style={styles.text}>Generating Zero-Knowledge proof...</Text>
+      </View>
+    );
+
+  if (!qrData)
+    return (
+      <View style={styles.center}>
+        <Text style={styles.error}>Something went wrong.</Text>
+      </View>
+    );
 
   return (
     <View style={styles.container}>
-      <View style={styles.glow} />
+      <Text style={styles.title}>Your ZK-Proof QR</Text>
 
-      <Animated.Text entering={FadeInUp} style={styles.title}>
-        Your Event Pass
-      </Animated.Text>
+      <View style={styles.qrBox}>
+        <QRCode value={JSON.stringify(qrData)} size={280} />
+      </View>
 
-      <Animated.View entering={FadeInUp.delay(120)} style={styles.qrWrapper}>
-        <QRCode value={qrValue} size={260} backgroundColor="white" />
-      </Animated.View>
-
-      <Animated.View entering={FadeInUp.delay(200)} style={styles.card}>
-        <Text style={styles.label}>UTxO Receipt</Text>
-        <Text style={styles.value}>{proof.utxo}</Text>
-
-        <Text style={styles.label}>Validator</Text>
-        <Text style={styles.value}>{proof.validator}</Text>
-      </Animated.View>
-
-      <Pressable onPress={() => router.replace("/wallet-home")}>
-        <Text style={styles.link}>← Back to Wallet</Text>
-      </Pressable>
+      <Text style={styles.sub}>Show this QR to the event organizer</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#0f172a",
-    alignItems: "center",
-    paddingTop: 80,
-  },
-
-  glow: {
-    position: "absolute",
-    width: 320,
-    height: 320,
-    backgroundColor: "rgba(56,189,248,0.12)",
-    borderRadius: 200,
-    top: -50,
-    right: -40,
-  },
-
-  title: {
-    color: "white",
-    fontSize: 28,
-    fontWeight: "800",
-    marginBottom: 40,
-  },
-
-  loading: {
-    color: "white",
-    marginTop: 80,
-  },
-
-  qrWrapper: {
-    padding: 18,
-    backgroundColor: "#1e293b",
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#334155",
-    shadowColor: "#38bdf8",
-    shadowOpacity: 0.35,
-    shadowOffset: { width: 0, height: 4 },
-  },
-
-  card: {
-    marginTop: 40,
-    width: "85%",
-    padding: 22,
-    backgroundColor: "#1e293b",
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: "#334155",
-  },
-
-  label: {
-    color: "#94a3b8",
-    marginTop: 14,
-  },
-
-  value: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-
-  link: {
-    color: "#38bdf8",
-    marginTop: 30,
-    fontSize: 16,
-  },
+  container: { flex: 1, backgroundColor: "#0f172a", alignItems: "center", paddingTop: 80 },
+  title: { fontSize: 28, fontWeight: "700", color: "white", marginBottom: 20 },
+  qrBox: { padding: 20, backgroundColor: "white", borderRadius: 20, elevation: 10 },
+  sub: { color: "#94a3b8", marginTop: 20, fontSize: 16 },
+  center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#0f172a" },
+  text: { color: "white", marginTop: 12 },
+  error: { color: "red", fontSize: 18 },
 });

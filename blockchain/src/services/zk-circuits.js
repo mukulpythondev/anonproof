@@ -6,9 +6,6 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.join(__dirname, "../storage/proofs.json");
 
-/* ---------------------------------------------
-   Utility — Load/Save Proof DB
-----------------------------------------------*/
 function loadDB() {
   if (!fs.existsSync(DB_PATH)) return [];
   return JSON.parse(fs.readFileSync(DB_PATH, "utf8"));
@@ -18,9 +15,6 @@ function saveDB(data) {
   fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
 }
 
-/* ---------------------------------------------
-   🔹 Mock ZK Proof Generator
-----------------------------------------------*/
 export async function generateProof(claim, inputValue) {
   console.log(`🔐 Generating ZK proof for claim: ${claim}`);
 
@@ -45,9 +39,6 @@ export async function generateProof(claim, inputValue) {
   return { proof, publicSignals };
 }
 
-/* ---------------------------------------------
-   🔹 Verify Proof (Mock)
-----------------------------------------------*/
 export async function verifyProof(proof, publicSignals) {
   console.log("🔍 Verifying ZK proof...");
 
@@ -61,17 +52,11 @@ export async function verifyProof(proof, publicSignals) {
   );
 }
 
-/* ---------------------------------------------
-   🔹 List All Proofs
-----------------------------------------------*/
 export async function listProofs() {
   const items = loadDB();
   return { count: items.length, proofs: items };
 }
 
-/* ---------------------------------------------
-   🔹 Save Proof Record
-----------------------------------------------*/
 export function saveProofRecord(record) {
   const db = loadDB();
   db.push(record);

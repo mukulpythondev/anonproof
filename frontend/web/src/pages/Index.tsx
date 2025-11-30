@@ -9,7 +9,7 @@ import BoyFriendMeme from "../../public/boyfriend_meme.png"
 import HomePage from "../../public/homepage.jpeg"
 import Wallet from "../../public/wallet.jpeg"
 import credentials from "../../public/credentials.jpeg"
-import entryqr from "../../public/entryqr.jpeg"
+import entryqr from "../../public/qrshare.jpeg"
 import dob from "../../public/dob.jpeg"
 const Index = () => {
   const [isScrolled, setIsScrolled] = useState(false);

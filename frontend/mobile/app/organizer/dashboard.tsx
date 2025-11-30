@@ -36,7 +36,9 @@ export default function OrganizerDashboard() {
           <Text style={styles.logTime}>{new Date(item.timestamp).toLocaleTimeString()}</Text>
         </View>
 
-        <Text style={styles.logUtxo}>{item.utxo.slice(0, 10)}...</Text>
+<Text style={styles.logUtxo}>
+  {item.utxo ? `${item.utxo.slice(0, 10)}...` : "No UTxO"}
+</Text>
       </View>
     </Animated.View>
   );

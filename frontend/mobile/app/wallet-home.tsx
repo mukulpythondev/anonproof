@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { loadCredentials } from "../util/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Animated, { FadeInUp, FadeIn, SlideInUp } from "react-native-reanimated";
-
+import { Linking } from "react-native";
 export default function WalletHome() {
   const [credentials, setCredentials] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -81,7 +81,17 @@ export default function WalletHome() {
           </Text>
 
           <Text style={styles.verified}>✔ Verified (Local Proof)</Text>
-          <Text style={styles.utxo}>UTxO ID: {item.utxo}</Text>
+         <Text
+  style={[styles.utxo, { color: "#38bdf8" }]}
+  onPress={() =>
+    Linking.openURL(
+      `https://preprod.cardanoscan.io/transaction/${item.utxo}`
+    )
+  }
+>
+  TX: {item.utxo.slice(0, 10)}...
+</Text>
+
         </View>
       </Pressable>
     </Animated.View>

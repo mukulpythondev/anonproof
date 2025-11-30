@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Text, TextInput, Pressable, ActivityIndicator, StyleSheet, linkin } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { useState } from "react";
 import Animated, { FadeInUp } from "react-native-reanimated";
@@ -15,35 +15,29 @@ export default function CredentialInput() {
     resident: { label: "Postal Code", placeholder: "Enter your postal code" },
   }[id] || { label: "Value", placeholder: "" };
 
-  const handleSubmit = async () => {
+ const handleSubmit = async () => {
   if (!value.trim()) return;
+
   setLoading(true);
 
-  try {
-    const result = await generateProof(id, value);
+  const response = await generateProof(id, value);
 
-const proof = {
-  proofHash: result.proofHash,
-  proof: result.proof,
-  publicSignals: result.publicSignals,
-  claim: id,
-  timestamp: new Date().toISOString(),
-  utxo: result.txHash || "pending",
-  validator: "midnight_zkp_v1"
-};
+  const proof = {
+    proofHash: response.proofHash,
+    claim: id,
+    inputValue: value,
+    timestamp: response.timestamp,
+    utxo: response.utxo,          // ✅ REAL TX HASH
+    validator: "midnight_zkp_v1",
+  };
 
-await saveCredential(proof);
-
-
-    router.push({
-      pathname: "/proof-success",
-      params: { proof: JSON.stringify(proof) },
-    });
-  } catch (err) {
-    alert("Proof generation failed: " + err.message);
-  }
-
+  await saveCredential(proof);
   setLoading(false);
+
+  router.push({
+    pathname: "/proof-success",
+    params: { proof: JSON.stringify(proof) },
+  });
 };
 
 
