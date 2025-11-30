@@ -114,10 +114,12 @@ const Index = () => {
               <Button size="lg" className="gradient-bg glow-shadow text-lg font-semibold px-8 py-6">
                 Get Started
               </Button>
-              <Button size="lg" variant="outline" className="text-lg font-semibold px-8 py-6 glow-border">
+             <a href="https://youtube.com/shorts/WwPY0iG4KCg">
+               <Button size="lg" variant="outline" className="text-lg font-semibold px-8 py-6 glow-border">
                 <Play className="w-5 h-5 mr-2" />
                 Watch Demo
               </Button>
+             </a>
             </div>
           </motion.div>
         </div>
@@ -327,6 +329,7 @@ const Index = () => {
             {/* Meme Zone Section */}
 {/* Meme Zone Section */}
 <section id="meme-zone" className="py-32 relative">
+        <h2 className="text-5xl font-bold mb-4">Designed for Privacy.</h2>
   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
   {[
     {
