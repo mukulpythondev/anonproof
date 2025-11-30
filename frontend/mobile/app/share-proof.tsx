@@ -21,7 +21,12 @@ export default function ShareProof() {
     );
   }
 
-  const qrValue = JSON.stringify(proof);
+  const qrValue = JSON.stringify({
+  proofHash: proof.proofHash,
+  utxo: proof.utxo,
+  claim: proof.claim
+});
+
 
   return (
     <View style={styles.container}>

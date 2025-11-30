@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ActivityIndicator, Pressable } from "react-nati
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { router } from "expo-router";
 import { saveScanLog } from "@/util/org-storage";
+import { verifyProof } from "@/util/api";
 export default function Scanner() {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
@@ -18,35 +19,42 @@ export default function Scanner() {
   setScanned(true);
 
   try {
-    const proof = JSON.parse(data);
+    const scannedData = JSON.parse(data);
+
+    const backend = await verifyProof(scannedData.proofHash);
 
     const entry = {
-      claim: proof.claim,
-      utxo: proof.utxo,
-      timestamp: proof.timestamp,
-      proofHash: proof.proofHash,
-      status: proof.validator === "midnight_zkp_v1" ? "success" : "fail"
+      claim: backend.claim,
+      utxo: backend.utxo,
+      proofHash: scannedData.proofHash,
+      timestamp: Date.now(),
+      status: backend.valid ? "success" : "fail",
     };
 
     await saveScanLog(entry);
 
-    router.push({
-      pathname: "/organizer/verify",
-      params: entry
-    });
+    if (backend.valid) {
+      router.push({
+        pathname: "/organizer/verify",
+        params: entry
+      });
+    } else {
+      router.push("/organizer/verify-fail?reason=Invalid%20Proof");
+    }
 
-  } catch (e) {
+  } catch (err) {
     await saveScanLog({
       claim: "Unknown",
       utxo: "N/A",
-      timestamp: Date.now(),
       proofHash: "invalid",
+      timestamp: Date.now(),
       status: "fail"
     });
 
     router.push("/organizer/verify-fail?reason=Invalid%20QR%20format");
   }
 };
+
 
 
   if (!permission) {

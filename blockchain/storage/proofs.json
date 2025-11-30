@@ -1,0 +1,101 @@
+[
+  {
+    "proofHash": "proof_1764455085008_6grn3he",
+    "claim": "age18",
+    "userId": "test_user_123",
+    "inputValue": "2000-05-15",
+    "utxo": null,
+    "validator": "midnight_zkp_v1",
+    "timestamp": "2025-11-29T22:24:45.008Z",
+    "proof": {
+      "pi_a": [
+        "mock_a1",
+        "mock_a2"
+      ],
+      "pi_b": [
+        [
+          "mock_b1",
+          "mock_b2"
+        ]
+      ],
+      "pi_c": [
+        "mock_c1",
+        "mock_c2"
+      ],
+      "protocol": "groth16",
+      "curve": "bn128"
+    },
+    "publicSignals": {
+      "claimType": "age18",
+      "result": true,
+      "timestamp": 1764455085008
+    },
+    "verified": false
+  },
+  {
+    "proofHash": "proof_1764455097006_cottf87",
+    "claim": "student",
+    "userId": "test_user_456",
+    "inputValue": "STU2024-12345",
+    "utxo": null,
+    "validator": "midnight_zkp_v1",
+    "timestamp": "2025-11-29T22:24:57.006Z",
+    "proof": {
+      "pi_a": [
+        "mock_a1",
+        "mock_a2"
+      ],
+      "pi_b": [
+        [
+          "mock_b1",
+          "mock_b2"
+        ]
+      ],
+      "pi_c": [
+        "mock_c1",
+        "mock_c2"
+      ],
+      "protocol": "groth16",
+      "curve": "bn128"
+    },
+    "publicSignals": {
+      "claimType": "student",
+      "result": true,
+      "timestamp": 1764455097006
+    },
+    "verified": false
+  },
+  {
+    "proofHash": "proof_1764455108811_rdxepcs",
+    "claim": "resident",
+    "userId": "test_user_789",
+    "inputValue": "560001",
+    "utxo": null,
+    "validator": "midnight_zkp_v1",
+    "timestamp": "2025-11-29T22:25:08.811Z",
+    "proof": {
+      "pi_a": [
+        "mock_a1",
+        "mock_a2"
+      ],
+      "pi_b": [
+        [
+          "mock_b1",
+          "mock_b2"
+        ]
+      ],
+      "pi_c": [
+        "mock_c1",
+        "mock_c2"
+      ],
+      "protocol": "groth16",
+      "curve": "bn128"
+    },
+    "publicSignals": {
+      "claimType": "resident",
+      "result": true,
+      "timestamp": 1764455108811
+    },
+    "verified": false
+  }
+]

@@ -3,7 +3,7 @@ import { useLocalSearchParams, router } from "expo-router";
 import { useState } from "react";
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { saveCredential } from "../util/storage";
-
+import { generateProof } from "../util/api";
 export default function CredentialInput() {
   const { id } = useLocalSearchParams();
   const [value, setValue] = useState("");
@@ -16,28 +16,25 @@ export default function CredentialInput() {
   }[id] || { label: "Value", placeholder: "" };
 
   const handleSubmit = async () => {
-    if (!value.trim()) return;
+  if (!value.trim()) return;
+  setLoading(true);
 
-    setLoading(true);
+  try {
+    const backendProof = await generateProof(id, value);
 
-    const proof = {
-      proofHash: `proof_${Date.now()}_${Math.random().toString(36).slice(2)}`,
-      claim: id,
-      inputValue: value,
-      timestamp: new Date().toISOString(),
-      utxo: `utxo_${Math.random().toString(36).slice(2)}`,
-      validator: "midnight_zkp_v1",
-    };
-
-    await saveCredential(proof);
-
-    setLoading(false);
+    await saveCredential(backendProof);
 
     router.push({
       pathname: "/proof-success",
-      params: { proof: JSON.stringify(proof) },
+      params: { proof: JSON.stringify(backendProof) },
     });
-  };
+  } catch (err) {
+    alert("Proof generation failed: " + err.message);
+  }
+
+  setLoading(false);
+};
+
 
   return (
     <View style={styles.container}>

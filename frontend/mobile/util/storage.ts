@@ -18,5 +18,5 @@ export const loadCredentialByClaim = async (claimId) => {
 
 
 export const clearCredentials = async () => {
-  await AsyncStorage.removeItem(KEY);
+await AsyncStorage.removeItem("midnightCredentials");
 };

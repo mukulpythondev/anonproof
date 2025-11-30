@@ -1,0 +1,82 @@
+{
+  "info": {
+    "name": "Midnight Pass API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:4000/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Generate Age Proof",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"claim\": \"age18\",\n  \"inputValue\": \"2000-05-15\",\n  \"userId\": \"test_user_123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:4000/api/proof/generate",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["api", "proof", "generate"]
+        }
+      }
+    },
+    {
+      "name": "Verify Proof",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"proofHash\": \"proof_1732982400_abc123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:4000/api/proof/verify",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["api", "proof", "verify"]
+        }
+      }
+    },
+    {
+      "name": "Get All Proofs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:4000/api/proof/all",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["api", "proof", "all"]
+        }
+      }
+    }
+  ]
+}
