@@ -1,46 +1,79 @@
+// src/services/zk-circuits.js
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DB_PATH = path.join(__dirname, "../storage/proofs.json");
+
+/* ---------------------------------------------
+   Utility — Load/Save Proof DB
+----------------------------------------------*/
+function loadDB() {
+  if (!fs.existsSync(DB_PATH)) return [];
+  return JSON.parse(fs.readFileSync(DB_PATH, "utf8"));
+}
+
+function saveDB(data) {
+  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+}
+
+/* ---------------------------------------------
+   🔹 Mock ZK Proof Generator
+----------------------------------------------*/
 export async function generateProof(claim, inputValue) {
-  // console.log(`🔐 Generating ZK proof for ${claim} with input: ${inputValue}`);
+  console.log(`🔐 Generating ZK proof for claim: ${claim}`);
 
-  await new Promise(resolve => setTimeout(resolve, 500));
+  // Simulate Groth16 delay
+  await new Promise((res) => setTimeout(res, 400));
 
-  const mockProof = {
-    pi_a: ['mock_a1', 'mock_a2'],
-    pi_b: [['mock_b1', 'mock_b2']],
-    pi_c: ['mock_c1', 'mock_c2'],
-    protocol: 'groth16',
-    curve: 'bn128'
+  const proof = {
+    protocol: "groth16",
+    curve: "bn128",
+    pi_a: ["a1", "a2"],
+    pi_b: [["b1", "b2"]],
+    pi_c: ["c1", "c2"],
   };
 
-  const mockPublicSignals = {
-    claimType: claim,
-    result: true,
+  const publicSignals = {
+    claim,
+    inputHash: `hash_${Math.random().toString(36).slice(2)}`,
+    valid: true,
     timestamp: Date.now(),
   };
 
-  return {
-    proof: mockProof,
-    publicSignals: mockPublicSignals,
-  };
+  return { proof, publicSignals };
 }
 
+/* ---------------------------------------------
+   🔹 Verify Proof (Mock)
+----------------------------------------------*/
 export async function verifyProof(proof, publicSignals) {
-  console.log(`🔍 Verifying ZK proof...`);
+  console.log("🔍 Verifying ZK proof...");
 
-  await new Promise(resolve => setTimeout(resolve, 300));
+  await new Promise((res) => setTimeout(res, 250));
 
-  const isValid =
+  return (
     proof &&
     proof.protocol === "groth16" &&
     publicSignals &&
-    publicSignals.result === true;
-
-  return isValid;
+    publicSignals.valid === true
+  );
 }
 
-// Keep this if router expects listProofs()
-export async function listProofs(req, res) {
-  return res.json({
-    success: true,
-    message: "Mock listing — real DB integration later",
-  });
+/* ---------------------------------------------
+   🔹 List All Proofs
+----------------------------------------------*/
+export async function listProofs() {
+  const items = loadDB();
+  return { count: items.length, proofs: items };
+}
+
+/* ---------------------------------------------
+   🔹 Save Proof Record
+----------------------------------------------*/
+export function saveProofRecord(record) {
+  const db = loadDB();
+  db.push(record);
+  saveDB(db);
 }

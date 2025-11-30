@@ -1,9 +1,12 @@
+// src/routes/proof.js
 import express from "express";
-import * as Cardano from "../services/cardano.js";     // ← FIXED IMPORT
 import {
   generateProof,
   verifyProof,
+  listProofs,
 } from "../services/zk-circuits.js";
+
+import Cardano from "../services/cardano.js";
 
 const router = express.Router();
 
@@ -17,7 +20,7 @@ router.get("/wallet/balance", async (req, res) => {
     if (!seedPhrase) {
       return res.status(500).json({
         success: false,
-        error: "WALLET_SEED_PHRASE is missing in .env",
+        error: "WALLET_SEED_PHRASE missing in .env",
       });
     }
 
@@ -38,31 +41,56 @@ router.get("/wallet/balance", async (req, res) => {
 });
 
 /* -------------------------------------------------
-   🔹 GENERATE PROOF
+   🔹 GENERATE PROOF + (optional) CREATE UTXO
    ------------------------------------------------- */
 router.post("/generate", async (req, res) => {
   try {
-    console.log("🔥 Incoming /generate body:", req.body);  // <-- Add this
-
     const { claim, inputValue } = req.body;
 
     if (!claim || !inputValue) {
-      console.log("❌ Missing claim or inputValue");
       return res.status(400).json({
         success: false,
         error: "Missing claim or inputValue",
       });
     }
 
-    const result = await generateProof(claim, inputValue);
+    console.log("🔥 Incoming /generate:", req.body);
+
+    // Step 1: Generate Mock ZK Proof
+    const { proof, publicSignals } = await generateProof(claim, inputValue);
+
+    // Step 2: Create a proofHash
+    const proofHash = `zk_${Date.now()}_${Math.random()
+      .toString(36)
+      .slice(2)}`;
+
+    // Step 3: (Optional) Create UTxO (only when testnet is working)
+    let utxo = null;
+
+    if (process.env.ENABLE_CARDANO === "true") {
+      try {
+        utxo = await Cardano.createProofUTxO(
+          proofHash,
+          claim,
+          process.env.WALLET_SEED_PHRASE
+        );
+      } catch (err) {
+        console.warn("⚠️ UTxO creation failed:", err.message);
+      }
+    }
 
     return res.json({
       success: true,
-      ...result,
+      proofHash,
+      claim,
+      inputValue,
+      publicSignals,
+      proof,
+      utxo,
+      timestamp: Date.now(),
     });
-
   } catch (err) {
-    console.error("💥 generateProof ERROR:", err);
+    console.error("❌ generateProof failed:", err);
     return res.status(500).json({
       success: false,
       error: "Proof generation error",
@@ -71,14 +99,19 @@ router.post("/generate", async (req, res) => {
   }
 });
 
-
-
 /* -------------------------------------------------
-   🔹 VERIFY PROOF
+   🔹 VERIFY PROOF ENDPOINT
    ------------------------------------------------- */
 router.post("/verify", async (req, res) => {
   try {
-    return await verifyProof(req, res);
+    const { proof, publicSignals } = req.body;
+
+    const isValid = await verifyProof(proof, publicSignals);
+
+    return res.json({
+      success: true,
+      isValid,
+    });
   } catch (err) {
     console.error("❌ verifyProof failed:", err);
     return res.status(500).json({
@@ -90,12 +123,14 @@ router.post("/verify", async (req, res) => {
 });
 
 /* -------------------------------------------------
-   🔹 LIST ALL PROOFS
+   🔹 GET ALL GENERATED PROOFS
    ------------------------------------------------- */
 router.get("/all", async (req, res) => {
   try {
-    return await listProofs(req, res);
+    const result = await listProofs();
+    return res.json(result);
   } catch (err) {
+    console.error("❌ listProofs error:", err);
     return res.status(500).json({
       success: false,
       error: "Failed to fetch proofs",
