@@ -52,7 +52,8 @@ Landing Page
 
 | Choose Credential | DOB Input | Event Entry QR |
 |-------------------|-----------|----------------|
-| <img width="260" src="https://github.com/user-attachments/assets/774246e6-3368-497b-bba6-d82c5d9e8072" /> | <img width="260" src="https://github.com/user-attachments/assets/4c3f6a8f-92c1-4cf6-a55a-e7322a2fe42c" /> | <img width="260" src="https://github.com/user-attachments/assets/745d4b67-f3d5-4122-a0fd-bbe0ed168298" /> |
+| <img width="260" src="https://github.com/user-attachments/assets/774246e6-3368-497b-bba6-d82c5d9e8072" /> | <img width="260" src="https://github.com/user-attachments/assets/4c3f6a8f-92c1-4cf6-a55a-e7322a2fe42c" /> | <img width="260" alt="image" src="https://github.com/user-attachments/assets/59981e93-baf5-4ab3-a58e-4f8923fdbd5a" />
+|
 
 ---
 
@@ -60,9 +61,10 @@ Landing Page
 
 ### Organizer Screens (3-Column Grid)
 
-| Login | Dashboard | Scan QR |
-|-------|-----------|---------|
-| <img width="260" src="https://github.com/user-attachments/assets/226dbf43-82ea-4ac8-b980-d4ffc4936752" /> | <img width="260" src="https://github.com/user-attachments/assets/359dd026-4423-4754-95cf-e1a3ded653eb" /> | <img width="260" src="https://github.com/user-attachments/assets/2707535b-fa8a-4821-9af8-b7652de2fa29" /> |
+| Login | Dashboard | Proof Validated |
+|-------|-----------|-----------------|
+| <img width="260" src="https://github.com/user-attachments/assets/226dbf43-82ea-4ac8-b980-d4ffc4936752" /> | <img width="260" src="https://github.com/user-attachments/assets/4a02b855-553f-446c-be25-a045969e261e" /> | <img width="260" src="https://github.com/user-attachments/assets/0505d41d-ec85-436a-acd0-d919c847e24c" /> |
+
 
 
 
